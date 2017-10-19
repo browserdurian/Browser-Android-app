@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.widget.SearchView;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,6 +24,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SearchView.OnQueryTextListener;
+import android.app.SearchManager;
+
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -72,7 +78,7 @@ public class MainActivity extends AppCompatActivity
         webSettings.setEnableSmoothTransition(true);
 
 
-        Button backButton =(Button) findViewById(R.id.backButton);
+       /* Button backButton =(Button) findViewById(R.id.backButton);
         Button forwardButton =(Button) findViewById(R.id.forwardButton);
 
         //Back Button Action
@@ -97,32 +103,7 @@ public class MainActivity extends AppCompatActivity
                     webview_main.goForward();
                 }
             }
-        });
-
-        //URL FROM USER INPUT
-        final EditText c_url = (EditText) findViewById(R.id.url_bar);
-        c_url.setOnKeyListener(new View.OnKeyListener()
-        {
-            //If user presses Enter you go to URL
-            public boolean onKey(View v, int keyCode, KeyEvent event)
-            {
-                if (event.getAction() == KeyEvent.ACTION_DOWN)
-                {
-                    switch (keyCode)
-                    {
-                        case KeyEvent.KEYCODE_DPAD_CENTER:
-                        case KeyEvent.KEYCODE_ENTER:
-                            go_url=c_url.getText().toString();
-                            webview_main.loadUrl(go_url);
-                            return true;
-                        default:
-                            break;
-                    }
-                }
-                return false;
-            }
-        });
-
+        });*/
     }
 
     @Override
@@ -174,8 +155,25 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        MenuItem url_bar_f= menu.findItem(R.id.cool_bar);
+
+        SearchView searchView = (SearchView)url_bar_f.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                go_url= query.toString();
+                webview_main.loadUrl(go_url);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

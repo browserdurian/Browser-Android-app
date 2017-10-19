@@ -32,4 +32,18 @@
         android:layout_height="wrap_content"
         android:text="android.studio@android.com" />
 
+   <!-- <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="B"/>
+
+    <Button
+        android:id="@+id/forwardButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:enabled="true"
+        android:text="F"/>-->
+
 </LinearLayout>
