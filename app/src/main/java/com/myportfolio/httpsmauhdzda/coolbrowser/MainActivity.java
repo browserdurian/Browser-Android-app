@@ -1,6 +1,7 @@
 package com.myportfolio.httpsmauhdzda.coolbrowser;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,11 +23,9 @@ import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.SearchView.OnQueryTextListener;
-import android.app.SearchManager;
 
+
+import java.util.ArrayList;
 
 
 public class MainActivity extends AppCompatActivity
@@ -131,14 +130,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     //Returns browser history
-    public void get_history(){
+    public ArrayList<String> get_history(){
         WebBackForwardList history = webview_main.copyBackForwardList();
+        ArrayList<String> history_url= new ArrayList<String>();
 
         for (int i=0; i<history.getSize();i++){
             WebHistoryItem item = history.getItemAtIndex(i);
             String url = item.getUrl();
+            history_url.add(url);
             System.out.println( "The URL at index: " + Integer.toString(i) + " is " + url );
         }
+        return history_url;
     }
 
 
@@ -164,6 +166,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onQueryTextSubmit(String query) {
                 go_url= query.toString();
+                if (!go_url.contains(".") && (!go_url.equalsIgnoreCase("google"))){
+                    go_url = "http://www.google.com/#q=" + go_url;
+                }
                 webview_main.loadUrl(go_url);
                 return false;
             }
@@ -201,7 +206,12 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         }
         else if (id == R.id.nav_history) {
+            ArrayList<String> history_url= get_history();
 
+            Intent historyScreenIntent= new Intent(this,HistoryScreen.class);
+            final int result =1;
+            historyScreenIntent.putExtra("history_url",history_url);
+            startActivityForResult(historyScreenIntent,result);
         }
         else if (id == R.id.nav_bookmarks) {
 
@@ -226,4 +236,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        go_url= data.getStringExtra("URL_clicked");
+        webview_main.loadUrl(go_url);
+    }
 }
