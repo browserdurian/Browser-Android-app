@@ -215,6 +215,10 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_bookmarks) {
 
+            Intent homeScreen= new Intent(this,Home_Activity.class);
+            final int result =1;
+            startActivityForResult(homeScreen,result);
+
         }
 
         else if (id == R.id.nav_mau)

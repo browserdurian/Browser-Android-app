@@ -26,6 +26,10 @@
             android:name=".HistoryScreen"
             android:label="History"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Home_Activity"
+            android:label="Home"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>
 
