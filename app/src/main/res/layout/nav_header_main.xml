@@ -12,38 +12,47 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@mipmap/mau_logo" />
+        android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:text="Cool options"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        <Button
+            android:id="@+id/homeButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:background="@mipmap/mau_logo"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="android.studio@android.com" />
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:background="@android:drawable/ic_media_previous"/>
 
-   <!-- <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="true"
-        android:text="B"/>
+        <Button
+            android:id="@+id/forwardButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:background="@android:drawable/ic_media_next"/>
 
-    <Button
-        android:id="@+id/forwardButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:enabled="true"
-        android:text="F"/>-->
+        <Button
+            android:id="@+id/bookmarkButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:enabled="true"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:background="@android:drawable/btn_star"/>
+
+    </LinearLayout>
 
 </LinearLayout>

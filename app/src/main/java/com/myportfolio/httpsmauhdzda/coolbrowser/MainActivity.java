@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.webkit.WebIconDatabase;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.MenuInflater;
@@ -31,8 +33,10 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String go_url= "https://www.google.com";
+    private String go_url= "https://mauhdzda.myportfolio.com/";
     private WebView webview_main;
+    private ArrayList<String> bookmarks= new ArrayList<String>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,9 @@ public class MainActivity extends AppCompatActivity
         webview_main.setWebViewClient(new WebViewClient());
         webview_main.loadUrl(go_url);
 
+        WebIconDatabase.getInstance().open(getDir("icons", MODE_PRIVATE).getPath());
+        webview_main.getFavicon();
+
         //For better webview performance
         webview_main.getSettings().setRenderPriority(WebSettings.RenderPriority.HIGH);
         webview_main.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
@@ -76,9 +83,20 @@ public class MainActivity extends AppCompatActivity
         webSettings.setUseWideViewPort(true);
         webSettings.setEnableSmoothTransition(true);
 
+        //Header buttons
+        Button homeButton = (Button)navigationView.getHeaderView(0).findViewById(R.id.homeButton);
+        Button backButton = (Button)navigationView.getHeaderView(0).findViewById(R.id.backButton);
+        Button forwardButton =(Button) navigationView.getHeaderView(0).findViewById(R.id.forwardButton);
+        Button bookmarkButton = (Button)navigationView.getHeaderView(0).findViewById(R.id.bookmarkButton);
 
-       /* Button backButton =(Button) findViewById(R.id.backButton);
-        Button forwardButton =(Button) findViewById(R.id.forwardButton);
+        //Home Button Action
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                go_url= "https://mauhdzda.myportfolio.com/";
+                webview_main.loadUrl(go_url);
+            }
+        });
 
         //Back Button Action
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -91,18 +109,24 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
         //Forward Button Action
         forwardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Go Forward if canGoForward is frue
-
-                if(webview_main.canGoForward()){
+                if (webview_main.canGoForward()) {
                     webview_main.goForward();
                 }
             }
-        });*/
+        });
+
+        //bookmark Button Action
+        bookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                go_url=webview_main.getUrl();
+                bookmarks.add(go_url);
+            }
+        });
     }
 
     @Override
@@ -113,13 +137,6 @@ public class MainActivity extends AppCompatActivity
                     if (webview_main.canGoBack()) {
                         webview_main.goBack();
                         get_history();
-                    } else {
-                        finish();
-                    }
-                    return true;
-                case KeyEvent.KEYCODE_FORWARD:
-                    if (webview_main.canGoForward()) {
-                        webview_main.goForward();
                     } else {
                         finish();
                     }
@@ -196,45 +213,27 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
-            // Handle the camera action
-        }
-        else if (id == R.id.nav_history) {
+        if (id == R.id.nav_history) {
             ArrayList<String> history_url= get_history();
-
             Intent historyScreenIntent= new Intent(this,HistoryScreen.class);
             final int result =1;
             historyScreenIntent.putExtra("history_url",history_url);
             startActivityForResult(historyScreenIntent,result);
         }
         else if (id == R.id.nav_bookmarks) {
-
-            Intent homeScreen= new Intent(this,Home_Activity.class);
+            Intent bookmarksScreenIntent= new Intent(this,BookmarksActivity.class);
             final int result =1;
-            startActivityForResult(homeScreen,result);
-
+            bookmarksScreenIntent.putExtra("bookmarks_url",bookmarks);
+            startActivityForResult(bookmarksScreenIntent,result);
         }
 
-        else if (id == R.id.nav_mau)
-        {
-            go_url= "https://mauhdzda.myportfolio.com/";
-            webview_main.loadUrl(go_url);
-        }
-        else if (id == R.id.nav_share)
-        {
-            go_url= "https://www.facebook.com/";
-            webview_main.loadUrl(go_url);
-
-        } else if (id == R.id.nav_send)
-        {
-
-        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -243,7 +242,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         go_url= data.getStringExtra("URL_clicked");
         webview_main.loadUrl(go_url);
     }

@@ -27,8 +27,8 @@
             android:label="History"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".Home_Activity"
-            android:label="Home"
+            android:name=".BookmarksActivity"
+            android:label="Bookmarks"
             android:theme="@style/AppTheme.NoActionBar"/>
 
     </application>

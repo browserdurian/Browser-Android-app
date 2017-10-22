@@ -44,7 +44,6 @@
                     String url_picked= String.valueOf(historyList.getItemAtPosition(position));
                     send_url.putExtra("URL_clicked", url_picked);
                     setResult(RESULT_OK,send_url);
-                    //Toast.makeText(HistoryScreen.this, url_picked, Toast.LENGTH_SHORT).show();
                     finish();
                 }
             });
