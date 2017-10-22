@@ -2,8 +2,10 @@ package com.myportfolio.httpsmauhdzda.coolbrowser;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.webkit.WebIconDatabase;
@@ -25,9 +27,12 @@ import android.webkit.WebHistoryItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     private String go_url= "https://mauhdzda.myportfolio.com/";
     private WebView webview_main;
     private ArrayList<String> bookmarks= new ArrayList<String>();
+    Set<String> bookmarksSet = new HashSet<String>();
 
 
     @Override
@@ -45,14 +51,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -123,8 +121,22 @@ public class MainActivity extends AppCompatActivity
         bookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                go_url=webview_main.getUrl();
-                bookmarks.add(go_url);
+
+                try{
+                    go_url=webview_main.getUrl();
+                    bookmarks.add(go_url);
+                    SharedPreferences bookmarks_pref= getSharedPreferences("bookmarks",MODE_PRIVATE);
+                    SharedPreferences.Editor bookmarkEditor = bookmarks_pref.edit();
+                    bookmarksSet.addAll(bookmarks);
+                    bookmarkEditor.putStringSet("bookmarks", bookmarksSet);
+                    bookmarkEditor.commit();
+                }
+
+                catch(Exception e){
+                    go_url=webview_main.getUrl();
+                    bookmarks.add(go_url);
+                    //Toast.makeText(getApplicationContext(),"Sorry, I have lots of bugs. Please restart and try again.",Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -228,10 +240,24 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(historyScreenIntent,result);
         }
         else if (id == R.id.nav_bookmarks) {
-            Intent bookmarksScreenIntent= new Intent(this,BookmarksActivity.class);
-            final int result =1;
-            bookmarksScreenIntent.putExtra("bookmarks_url",bookmarks);
-            startActivityForResult(bookmarksScreenIntent,result);
+
+            try{
+                SharedPreferences loadBookmarks=getSharedPreferences("bookmarks",0);
+                bookmarksSet = loadBookmarks.getStringSet("bookmarks",bookmarksSet);
+                bookmarks = new ArrayList<String>(bookmarksSet);
+
+                Intent bookmarksScreenIntent= new Intent(this,BookmarksActivity.class);
+                final int result =1;
+                bookmarksScreenIntent.putExtra("bookmarks_url",bookmarks);
+                startActivityForResult(bookmarksScreenIntent,result);
+
+            }
+
+            catch(Exception e){
+                Toast.makeText(this, "No bookmarks yet", Toast.LENGTH_LONG).show();
+            }
+
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -245,4 +271,6 @@ public class MainActivity extends AppCompatActivity
         go_url= data.getStringExtra("URL_clicked");
         webview_main.loadUrl(go_url);
     }
+
+
 }

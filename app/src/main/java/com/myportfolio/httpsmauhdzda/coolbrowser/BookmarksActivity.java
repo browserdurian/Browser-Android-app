@@ -21,6 +21,8 @@ import static com.myportfolio.httpsmauhdzda.coolbrowser.R.id.webview_main;
  */
 
 public class BookmarksActivity extends AppCompatActivity {
+    //Sends back the URL
+    final Intent send_url= new Intent();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +40,7 @@ public class BookmarksActivity extends AppCompatActivity {
         final ListView bookmarksList= (ListView) findViewById(R.id.bookmarksList);
         bookmarksList.setAdapter(l_adapter);
 
-        //Sends back the URL
-        final Intent send_url= new Intent();
+
 
         bookmarksList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
@@ -50,6 +51,7 @@ public class BookmarksActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
 
     @Override
@@ -57,10 +59,10 @@ public class BookmarksActivity extends AppCompatActivity {
         if (event.getAction() == android.view.KeyEvent.ACTION_DOWN) {
             switch (keyCode) {
                 case android.view.KeyEvent.KEYCODE_BACK:
-                 finish();
+                    setResult(RESULT_OK,send_url);
+                    finish();
             }
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }
