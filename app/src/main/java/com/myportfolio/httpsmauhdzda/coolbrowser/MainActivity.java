@@ -257,7 +257,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(this, "No bookmarks yet", Toast.LENGTH_LONG).show();
             }
 
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
